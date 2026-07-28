@@ -21,7 +21,7 @@ public class CustomerRepo {
         return customers;
     }
 
-    public Optional<Customer> getCustomerById(int id) {
+    public Optional<Customer> getCustomerById(Integer id) {
         List<Customer> customers = getCustomers();
         return customers.stream().filter(c -> c.getId() == id).findFirst();
     }
@@ -37,14 +37,27 @@ public class CustomerRepo {
     }
 
     public Customer updateCustomer(int id, Customer updatedCustomer) {
-        Optional<Customer> existingCustomerOpt = getCustomerById(id);
+            Customer existingCustomer = getCustomerById(id).get();
+            if (updatedCustomer.getName() != null) {
+                existingCustomer.setName(updatedCustomer.getName());
+            }
+            if (updatedCustomer.getBalance() != 0.0) {
+                existingCustomer.setBalance(existingCustomer.getBalance() + updatedCustomer.getBalance());
+            }
+            return existingCustomer;
+    }
+}
+
+
+
+    /*
+    Optional<Customer> existingCustomerOpt = getCustomerById(id);
         if (existingCustomerOpt.isPresent()) {
             Customer existingCustomer = existingCustomerOpt.get();
+            Customer existingCustomer = getCustomerById(id).get();
             existingCustomer.setName(updatedCustomer.getName());
             return existingCustomer;
         } else {
             return null; // or throw an exception
         }
-    }
-
-}
+     */

@@ -1,6 +1,5 @@
 package com.example.bankapi.controllers;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,30 +38,26 @@ public class CustomerController {
 
    @PostMapping("/customers")
     public ResponseEntity<Customer> createCustomer(@RequestBody Customer customer) {
-        Customer createdCustomer = customerService.createCustomer(customer);
-        return ResponseEntity.ok(createdCustomer);
+        return ResponseEntity.ok(customerService.createCustomer(customer));
     }
 
     @DeleteMapping("/customers/{id}")
     public ResponseEntity<Void> deleteCustomer(@PathVariable int id) {
-        Optional<Customer> customerOptional = customerService.getCustomerById(id);
-        if (customerOptional.isPresent()) {
-            customerService.deleteCustomer(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return customerService.getCustomerById(id)
+                .map(c -> {
+                    customerService.deleteCustomer(id);
+                    return ResponseEntity.noContent().<Void>build();
+                })
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PutMapping("/customers/{id}")
     public ResponseEntity<Customer> updateCustomer(@PathVariable int id, @RequestBody Customer updatedCustomer) {
-        Optional<Customer> customerOptional = customerService.getCustomerById(id);
-        if (customerOptional.isPresent()) {
-            Customer existingCustomer = customerOptional.get();
-            existingCustomer.setName(updatedCustomer.getName());
-            return ResponseEntity.ok(existingCustomer);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return customerService.getCustomerById(id)
+                .map(c -> {
+                    return ResponseEntity.ok(customerService.updateCustomer(id, updatedCustomer));
+                })
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }
+
