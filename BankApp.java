@@ -62,8 +62,21 @@ public class BankApp {
     }
 
     private static void userMenu(String username) {
-        displayMessage("Welcome " + username + "!");
-        // User menu logic here
+        if (hasAccount(username)) {
+            displayMessage("Welcome " + username + "!");
+        } else {
+            createAccount(username);
+        }
+    }
+
+    private static boolean hasAccount(String username) {
+        // Logic to check if the user has an account
+        return true;
+    }
+
+    private static void createAccount(String username) {
+        // Logic to create a new account for the user
+        displayMessage("Account created for " + username);
     }
 }
 class Account{
