@@ -34,5 +34,7 @@ build/
 
 .Ds_Store
 *.log
+
+mongo
 .env
 .env.*
