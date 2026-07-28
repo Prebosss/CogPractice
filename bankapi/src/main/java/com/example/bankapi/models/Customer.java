@@ -1,7 +1,12 @@
 package com.example.bankapi.models;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection = "customers")
 public class Customer {
-    private Integer id;
+    @Id
+    private String id;
     private String name;
     private double balance;
 
@@ -9,17 +14,17 @@ public class Customer {
         super();
     }
 
-    public Customer(Integer id, String name) {
+    public Customer(String id, String name) {
         this.id = id;
         this.name = name;
         this.balance = 0.00; 
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

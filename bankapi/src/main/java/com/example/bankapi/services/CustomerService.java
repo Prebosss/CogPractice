@@ -1,4 +1,5 @@
 package com.example.bankapi.services;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -16,22 +17,32 @@ public class CustomerService {
     }
 
     public List<Customer> getCustomers() {
-        return customerRepo.getCustomers();
+        return customerRepo.findAll();
     }
 
-    public Optional<Customer> getCustomerById(int id) {
-        return customerRepo.getCustomerById(id);
+    public Optional<Customer> getCustomerById(String id) {
+        return customerRepo.findById(id);
     }
 
     public Customer createCustomer(Customer customer) {
-        return customerRepo.createCustomer(customer);
+        return customerRepo.save(customer);
     }
 
-    public void deleteCustomer(int id) {
-        customerRepo.deleteCustomer(id);
+    public void deleteCustomer(String id) {
+        customerRepo.deleteById(id);
     }
 
-    public Customer updateCustomer(int id, Customer updatedCustomer) {
-        return customerRepo.updateCustomer(id, updatedCustomer);
+    public Customer updateCustomer(String id, Customer updatedCustomer) {
+        return customerRepo.findById(id)
+                .map(existingCustomer -> {
+                    if (updatedCustomer.getName() != null) {
+                        existingCustomer.setName(updatedCustomer.getName());
+                    }
+                    if (updatedCustomer.getBalance() != 0.0) {
+                        existingCustomer.setBalance(existingCustomer.getBalance() + updatedCustomer.getBalance());
+                    }
+                    return customerRepo.save(existingCustomer);
+                })
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
     }
 }
