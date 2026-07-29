@@ -23,7 +23,8 @@ public class TransactionRepo {
     }
 
     public Optional<Transaction> getTransactionById(Integer id) {
-        return this.transactions.stream().filter(t -> t.getId() == id).findFirst();
+        List<Transaction> transactions = getTransactions();
+        return transactions.stream().filter(t -> t.getId() == id).findFirst();
     }
 
     public Transaction createTransaction(Transaction transaction) {
