@@ -1,0 +1,13 @@
+$kind: http-request
+name: Get All Users
+description: ""
+url: http://localhost:8080/api/v1/users
+method: GET
+body:
+  type: json
+  content: |-
+    {
+        "username": "user3",
+        "password": "user3"
+    }
+order: 4394252409574376

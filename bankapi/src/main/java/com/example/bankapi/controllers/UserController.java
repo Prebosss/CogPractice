@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.bankapi.models.User;
 import com.example.bankapi.services.UserService;
+
 @RestController
 @RequestMapping("/api/v1")
 public class UserController {
@@ -28,7 +29,7 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable int id) {
+    public ResponseEntity<User> getUserById(@PathVariable String id) {
         return this.userService.getUserById(id)
         .map(ResponseEntity::ok)
         .orElseGet(() -> ResponseEntity.notFound().build());
@@ -40,7 +41,7 @@ public class UserController {
     }
 
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable int id) {
+    public ResponseEntity<Void> deleteUser(@PathVariable String id) {
         return userService.getUserById(id)
                 .map(u -> {
                     userService.deleteUser(id);
@@ -50,13 +51,19 @@ public class UserController {
     }
 
     @PutMapping("/users/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable int id, @RequestBody User updatedUser) {
+    public ResponseEntity<User> updateUser(@PathVariable String id, @RequestBody User updatedUser) {
         return userService.getUserById(id)
                 .map(u -> {
                     return ResponseEntity.ok(userService.updateUser(id, updatedUser));
                 })
                 .orElseGet(() -> ResponseEntity.notFound().build());
-
     }
+
+    @PostMapping("/users/login")
+    public ResponseEntity<User> login(@RequestBody User user) {
+        return userService.login(user.getUsername(), user.getPassword())
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(401).build());
+    }   
     
 }

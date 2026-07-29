@@ -30,7 +30,7 @@ public class AccountController {
     }
 
     @GetMapping("/accounts/{id}")
-    public ResponseEntity<Account> getAccountById(@PathVariable int id) {
+    public ResponseEntity<Account> getAccountById(@PathVariable String id) {
         return this.accountService.getAccountById(id)
         .map(ResponseEntity::ok)
         .orElseGet(() -> ResponseEntity.notFound().build());
@@ -42,7 +42,7 @@ public class AccountController {
     }
 
     @DeleteMapping("/accounts/{id}")
-    public ResponseEntity<Void> deleteAccount(@PathVariable int id) {
+    public ResponseEntity<Void> deleteAccount(@PathVariable String id) {
         return accountService.getAccountById(id)
                 .map(a -> {
                     accountService.deleteAccount(id);
@@ -52,10 +52,10 @@ public class AccountController {
     }
 
     @PutMapping("/accounts/{id}")
-    public ResponseEntity<Account> updateAccount(@PathVariable int id, @RequestBody Account updatedAccount) {
+    public ResponseEntity<Account> updateAccount(@PathVariable String id, @RequestBody Account updatedAccount) {
         return accountService.getAccountById(id)
                 .map(a -> {
-                    return ResponseEntity.ok(accountService.updateAccount(id, updatedAccount));
+                    return ResponseEntity.ok(accountService.updateAccount(String.valueOf(id), updatedAccount));
                 })
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }

@@ -1,0 +1,12 @@
+$kind: http-request
+name: Put Account
+description: ""
+url: http://localhost:8080/api/v1/accounts/6a6a32924e9aafa07d11d3dc
+method: PUT
+body:
+  type: json
+  content: |-
+    {
+        "balance": 500
+    }
+order: 240011673536588

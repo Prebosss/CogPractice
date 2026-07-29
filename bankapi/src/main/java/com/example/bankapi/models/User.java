@@ -1,24 +1,31 @@
 package com.example.bankapi.models;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection = "users")
 
 public class User {
-    private Integer id;
+
+    @Id
+    private String id;
+    
     private String username;
     private String password;
     public User() {
         super();    
     }
 
-    public User(Integer id, String username, String password) {
+    public User(String id, String username, String password) {
         this.id = id;
         this.username = username;
         this.password = password;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

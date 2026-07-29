@@ -20,11 +20,11 @@ public class TransactionService {
     }
 
     public List<Transaction> getTransactions() {
-        return transactionRepo.getTransactions();
+        return transactionRepo.findAll();
     }
 
-    public Optional<Transaction> getTransactionById(int id) {
-        return transactionRepo.getTransactionById(id);
+    public Optional<Transaction> getTransactionById(String id) {
+        return transactionRepo.findById(id);
     }
 
     public Transaction createTransaction(Transaction transaction) {
@@ -43,10 +43,11 @@ public class TransactionService {
             }
             account.setBalance(account.getBalance() - amount);
         }
-        return transactionRepo.createTransaction(transaction);
+        accountService.updateAccount(account.getId(), account);
+        return transactionRepo.save(transaction);
     }
 
-    public void deleteTransaction(int id) {
-        transactionRepo.deleteTransaction(id);
+    public void deleteTransaction(String id) {
+        transactionRepo.deleteById(id);
     }
 }

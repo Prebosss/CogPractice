@@ -1,0 +1,13 @@
+$kind: http-request
+name: Post Account
+description: ""
+url: http://localhost:8080/api/v1/accounts
+method: POST
+body:
+  type: json
+  content: |-
+    {
+        "userId": "6a6a2b624ec6736a8b49d1ee",
+        "accountType": "SAVINGS"
+    }
+order: 531135841140
