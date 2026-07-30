@@ -1,0 +1,27 @@
+# macOS
+.DS_Store
+
+# VS Code / IDE
+.vscode/
+.idea/
+*.iml
+
+# React / Node
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+
+# Spring Boot / Maven
+target/
+*.log
+
+# Java
+*.class
+
+# Secrets and local configuration
+application-local.properties
+application-local.yml
+application-secret.properties
+application-secret.yml

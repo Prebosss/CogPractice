@@ -13,6 +13,10 @@ public class Transaction {
     private double amount;
     private String transactionType;
 
+    public Transaction() {
+        super();
+    }
+
     public Transaction(String id, String accountId, double amount, String transactionType) {
         this.id = id;
         this.accountId = accountId;
