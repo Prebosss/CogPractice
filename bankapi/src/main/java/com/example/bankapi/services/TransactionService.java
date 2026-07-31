@@ -3,7 +3,9 @@ package com.example.bankapi.services;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.example.bankapi.models.Account;
 import com.example.bankapi.models.Transaction;
@@ -29,17 +31,18 @@ public class TransactionService {
 
     public Transaction createTransaction(Transaction transaction) {
         Account account = accountService
-            .getAccountById(transaction.getAccountId())
-            .orElseThrow(() -> new RuntimeException("Account not found"));
+                .getAccountById(transaction.getAccountId())
+                .orElseThrow(() -> new RuntimeException("Account not found"));
         double amount = transaction.getAmount();
         String transactionType = transaction.getTransactionType();
 
         if (transactionType.equalsIgnoreCase("DEPOSIT")) {
             account.setBalance(account.getBalance() + amount);
-        } 
-        else if (transactionType.equalsIgnoreCase("WITHDRAWAL")) {
+        } else if (transactionType.equalsIgnoreCase("WITHDRAWAL")) {
             if (account.getBalance() < amount) {
-                throw new RuntimeException("Declined");
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "Declined: insufficient funds");
             }
             account.setBalance(account.getBalance() - amount);
         }

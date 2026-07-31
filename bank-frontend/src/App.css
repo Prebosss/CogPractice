@@ -2,6 +2,56 @@
   min-height: 100vh;
 }
 
+:root {
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+  color: #f8f8ff;
+  background: #07070b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at 15% 10%, rgba(0, 238, 255, 0.16), transparent 24rem),
+    radial-gradient(circle at 80% 20%, rgba(255, 59, 204, 0.16), transparent 28rem),
+    radial-gradient(circle at 50% 100%, rgba(184, 255, 0, 0.1), transparent 24rem),
+    linear-gradient(#11121a 1px, transparent 1px),
+    linear-gradient(90deg, #11121a 1px, transparent 1px),
+    #07070b;
+  background-size:
+    auto,
+    auto,
+    auto,
+    28px 28px,
+    28px 28px,
+    auto;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.18;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 2px,
+      rgba(255, 255, 255, 0.035) 3px
+    );
+  mix-blend-mode: screen;
+}
+
 button,
 input,
 select {
@@ -9,18 +59,94 @@ select {
 }
 
 button {
-  border: none;
+  min-height: 46px;
+  border: 1px solid #00efff;
   border-radius: 8px;
-  padding: 0.75rem 1rem;
-  background: #172554;
-  color: white;
+  padding: 0.8rem 1rem;
+  color: #061014;
+  font-family: "Courier New", monospace;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background:
+    linear-gradient(
+      180deg,
+      #eaffff 0%,
+      #8df8ff 35%,
+      #00ddeb 65%,
+      #0099a8 100%
+    );
+  box-shadow:
+    0 0 12px rgba(0, 238, 255, 0.55),
+    inset 0 1px 0 white,
+    inset 0 -3px 0 rgba(0, 0, 0, 0.28);
   cursor: pointer;
+  transition:
+    transform 120ms ease,
+    filter 120ms ease,
+    box-shadow 120ms ease;
+}
+
+button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.15);
+  box-shadow:
+    0 0 22px rgba(0, 238, 255, 0.8),
+    inset 0 1px 0 white,
+    inset 0 -3px 0 rgba(0, 0, 0, 0.28);
+}
+
+button:active:not(:disabled) {
+  transform: translateY(1px);
 }
 
 button:disabled {
   cursor: not-allowed;
-  opacity: 0.6;
+  opacity: 0.45;
 }
+
+form {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.4rem;
+}
+
+label {
+  display: grid;
+  gap: 0.45rem;
+  color: #b6b7cb;
+  font-family: "Courier New", monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+input,
+select {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid #3d4963;
+  border-radius: 7px;
+  padding: 0.75rem 0.85rem;
+  color: #f7f7ff;
+  background:
+    linear-gradient(180deg, #181a26, #0d0e16);
+  box-shadow:
+    inset 0 0 12px rgba(0, 0, 0, 0.6),
+    0 0 0 rgba(0, 238, 255, 0);
+  outline: none;
+}
+
+input:focus,
+select:focus {
+  border-color: #00efff;
+  box-shadow:
+    inset 0 0 12px rgba(0, 0, 0, 0.6),
+    0 0 12px rgba(0, 238, 255, 0.35);
+}
+
+/* Login */
 
 .auth-page {
   min-height: 100vh;
@@ -30,73 +156,337 @@ button:disabled {
 }
 
 .auth-card {
-  width: min(100%, 420px);
+  position: relative;
+  width: min(100%, 440px);
   padding: 2rem;
-  border-radius: 16px;
-  background: white;
-  box-shadow: 0 16px 45px rgba(15, 23, 42, 0.12);
+  border: 1px solid #5a6380;
+  border-radius: 18px;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.09), transparent 28%),
+    linear-gradient(180deg, #202331, #0d0e16);
+  box-shadow:
+    0 0 0 3px #08090e,
+    0 0 0 4px #30364a,
+    0 0 40px rgba(0, 238, 255, 0.16),
+    0 0 60px rgba(255, 59, 204, 0.12);
+}
+
+.auth-card::before {
+  content: "ONLINE BANKING // CONNECTED";
+  display: inline-block;
+  margin-bottom: 1.2rem;
+  padding: 0.35rem 0.55rem;
+  border: 1px solid #b8ff00;
+  color: #b8ff00;
+  font-family: "Courier New", monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.09em;
+  background: rgba(184, 255, 0, 0.08);
+  box-shadow: 0 0 10px rgba(184, 255, 0, 0.25);
+}
+
+.auth-card::after {
+  content: "★";
+  position: absolute;
+  top: -24px;
+  right: -18px;
+  color: #ff4dcc;
+  font-size: 4.6rem;
+  text-shadow:
+    0 0 8px #ff4dcc,
+    0 0 20px rgba(255, 77, 204, 0.7);
+  transform: rotate(12deg);
 }
 
 .auth-card h1 {
-  margin-bottom: 0.25rem;
+  margin: 0;
+  font-size: clamp(2.5rem, 9vw, 4.4rem);
+  line-height: 0.86;
+  letter-spacing: -0.08em;
+  text-transform: uppercase;
+  background:
+    linear-gradient(
+      180deg,
+      #ffffff 0%,
+      #a7c8ff 28%,
+      #727b9b 52%,
+      #ffffff 75%,
+      #7a85a8 100%
+    );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 10px rgba(120, 190, 255, 0.26));
 }
 
-form {
-  display: grid;
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
-
-label {
-  display: grid;
-  gap: 0.4rem;
-  font-weight: 600;
-}
-
-input,
-select {
-  width: 100%;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  padding: 0.75rem;
-  background: white;
+.auth-card > p {
+  margin: 1rem 0 0;
+  color: #9ea2ba;
+  font-family: "Courier New", monospace;
+  font-size: 0.8rem;
+  line-height: 1.55;
 }
 
 .text-button {
   width: 100%;
   margin-top: 1rem;
-  padding: 0;
+  border: 0;
+  color: #ff61d5;
   background: transparent;
-  color: #1d4ed8;
+  box-shadow: none;
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
+.text-button:hover:not(:disabled) {
+  transform: none;
+  box-shadow: none;
+  text-shadow: 0 0 10px #ff61d5;
+}
+
+/* Dashboard */
+
 .dashboard {
-  width: min(1200px, calc(100% - 2rem));
+  width: min(1180px, calc(100% - 2rem));
   margin: 0 auto;
-  padding: 2rem 0;
+  padding: 1.5rem 0 4rem;
 }
 
 .dashboard-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 2rem;
+  gap: 1.5rem;
+  margin-bottom: 1.6rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid #2f3650;
+  border-radius: 13px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent),
+    #10121b;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 0 18px rgba(0, 238, 255, 0.08);
 }
 
-.dashboard-header h1,
-.dashboard-header p {
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.brand-logo {
+  display: grid;
+  width: 52px;
+  height: 52px;
+  place-items: center;
+  border: 1px solid #00efff;
+  border-radius: 14px;
+  color: #05080c;
+  font-family: "Courier New", monospace;
+  font-size: 1.45rem;
+  font-weight: 900;
+  background:
+    radial-gradient(circle at 30% 25%, white, #8df8ff 25%, #00cbd8 65%);
+  box-shadow:
+    0 0 14px rgba(0, 238, 255, 0.72),
+    inset 0 1px 0 white;
+  transform: rotate(-5deg);
+}
+
+.brand h1 {
   margin: 0;
+  font-size: 1.35rem;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
 }
 
-.dashboard-header p {
-  margin-top: 0.35rem;
-  color: #64748b;
+.brand p {
+  margin: 0.15rem 0 0;
+  color: #7e859e;
+  font-family: "Courier New", monospace;
+  font-size: 0.68rem;
+  text-transform: uppercase;
 }
 
-.secondary-button {
-  background: #475569;
+.header-user {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
+
+.user-avatar {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border: 1px solid #ff4dcc;
+  border-radius: 50%;
+  color: white;
+  font-family: "Courier New", monospace;
+  font-weight: 900;
+  background:
+    radial-gradient(circle at 35% 30%, #ffb9ef, #ff4dcc 35%, #62154e 75%);
+  box-shadow: 0 0 12px rgba(255, 77, 204, 0.55);
+}
+
+.user-details {
+  display: grid;
+  line-height: 1.15;
+}
+
+.user-details span {
+  color: #7e859e;
+  font-family: "Courier New", monospace;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+}
+
+.logout-button {
+  margin-left: 0.5rem;
+  border-color: #ff4dcc;
+  color: #fff;
+  background:
+    linear-gradient(180deg, #72265f, #2d1127);
+  box-shadow:
+    0 0 10px rgba(255, 77, 204, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+/* Balance display */
+
+.balance-hero {
+  position: relative;
+  min-height: 255px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  overflow: hidden;
+  margin-bottom: 1.4rem;
+  padding: 2rem 2.2rem;
+  border: 1px solid #7884a8;
+  border-radius: 20px;
+  color: #f8f8ff;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.13), transparent 24%),
+    linear-gradient(135deg, #151827 0%, #171b36 40%, #291545 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 0 0 3px #08090e,
+    0 0 32px rgba(0, 238, 255, 0.17),
+    0 0 52px rgba(255, 77, 204, 0.12);
+}
+
+.balance-hero::before {
+  content: "★ ONLINE ★ ONLINE ★ ONLINE ★ ONLINE ★";
+  position: absolute;
+  top: 16px;
+  right: -70px;
+  color: rgba(0, 238, 255, 0.13);
+  font-family: "Courier New", monospace;
+  font-size: 1rem;
+  letter-spacing: 0.16em;
+  transform: rotate(22deg);
+}
+
+.balance-hero::after {
+  content: "ELECTRO.BANK.EXE";
+  position: absolute;
+  right: 18px;
+  bottom: 10px;
+  color: rgba(255, 255, 255, 0.07);
+  font-family: "Courier New", monospace;
+  font-size: clamp(2.5rem, 7vw, 6rem);
+  font-weight: 900;
+  letter-spacing: -0.07em;
+}
+
+.balance-content {
+  position: relative;
+  z-index: 2;
+}
+
+.eyebrow {
+  display: inline-block;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid #00efff;
+  color: #00efff;
+  font-family: "Courier New", monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  background: rgba(0, 238, 255, 0.08);
+  box-shadow: 0 0 12px rgba(0, 238, 255, 0.2);
+}
+
+.balance-content h2 {
+  margin: 0.7rem 0 0;
+  font-size: clamp(3rem, 8vw, 5.6rem);
+  line-height: 0.88;
+  letter-spacing: -0.09em;
+  background:
+    linear-gradient(
+      180deg,
+      #ffffff 0%,
+      #cae8ff 25%,
+      #7885ae 50%,
+      #ffffff 72%,
+      #8894bc 100%
+    );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 14px rgba(0, 238, 255, 0.18));
+}
+
+.balance-content p {
+  margin: 0.8rem 0 0;
+  color: #a4a9be;
+  font-family: "Courier New", monospace;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.balance-emoji {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  width: 118px;
+  height: 118px;
+  place-items: center;
+  border: 1px solid #b8ff00;
+  border-radius: 28px;
+  color: #b8ff00;
+  font-size: 4rem;
+  background:
+    radial-gradient(circle at 30% 20%, #2b3347, #10121b 68%);
+  box-shadow:
+    0 0 22px rgba(184, 255, 0, 0.35),
+    inset 0 0 16px rgba(184, 255, 0, 0.08);
+  transform: rotate(6deg);
+}
+
+.hero-decoration {
+  position: absolute;
+  border: 1px solid rgba(0, 238, 255, 0.18);
+  border-radius: 50%;
+}
+
+.hero-decoration-one {
+  width: 240px;
+  height: 240px;
+  top: -110px;
+  right: 130px;
+}
+
+.hero-decoration-two {
+  width: 180px;
+  height: 180px;
+  right: -45px;
+  bottom: -80px;
+}
+
+/* Panels */
 
 .dashboard-grid {
   display: grid;
@@ -105,14 +495,83 @@ select {
 }
 
 .panel {
+  position: relative;
   padding: 1.5rem;
-  border-radius: 14px;
-  background: white;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+  border: 1px solid #303750;
+  border-radius: 15px;
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.06), transparent 25%),
+    linear-gradient(180deg, #151722, #0d0e15);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 0 18px rgba(0, 0, 0, 0.5);
 }
 
-.panel h2 {
-  margin-top: 0;
+.panel::before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.035);
+  border-radius: 10px;
+  pointer-events: none;
+}
+
+.panel-heading {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.panel-heading > div {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.panel-heading h2 {
+  margin: 0;
+  font-size: 1.05rem;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.section-icon {
+  display: grid;
+  width: 39px;
+  height: 39px;
+  place-items: center;
+  border: 1px solid #4c5878;
+  border-radius: 11px;
+  background:
+    linear-gradient(180deg, #282d40, #11131c);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 0 10px rgba(0, 238, 255, 0.08);
+}
+
+.account-count {
+  min-width: 32px;
+  padding: 0.3rem 0.55rem;
+  border: 1px solid #ff4dcc;
+  border-radius: 999px;
+  color: #ff82dc;
+  font-family: "Courier New", monospace;
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-align: center;
+  background: rgba(255, 77, 204, 0.09);
+}
+
+.panel-description {
+  position: relative;
+  z-index: 1;
+  margin: 0.65rem 0 0;
+  color: #858ba1;
+  font-family: "Courier New", monospace;
+  font-size: 0.75rem;
+  line-height: 1.5;
 }
 
 .accounts-panel,
@@ -120,70 +579,167 @@ select {
   grid-column: 1 / -1;
 }
 
+/* Account cards */
+
 .account-list,
 .transaction-list {
+  position: relative;
+  z-index: 1;
   display: grid;
-  gap: 0.75rem;
+  gap: 0.8rem;
+  margin-top: 1.2rem;
 }
 
-.account-card,
-.transaction-row {
+.account-card {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
   padding: 1rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
+  border: 1px solid #3a435d;
+  border-radius: 12px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent),
+    #11131c;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 0 0 rgba(0, 238, 255, 0);
+  transition:
+    transform 130ms ease,
+    border-color 130ms ease,
+    box-shadow 130ms ease;
 }
 
-.account-card strong {
-  font-size: 1.4rem;
+.account-card:hover {
+  transform: translateY(-2px);
+  border-color: #00efff;
+  box-shadow: 0 0 16px rgba(0, 238, 255, 0.18);
+}
+
+.account-card-left {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.account-icon {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border: 1px solid #526181;
+  border-radius: 12px;
+  font-size: 1.3rem;
+  background:
+    linear-gradient(180deg, #2a3044, #12141d);
+}
+
+.checking-icon {
+  box-shadow: 0 0 12px rgba(0, 238, 255, 0.2);
+}
+
+.savings-icon {
+  box-shadow: 0 0 12px rgba(184, 255, 0, 0.2);
 }
 
 .account-type {
-  font-weight: 700;
+  font-size: 0.9rem;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
 }
 
 .account-id,
 .transaction-row p {
   margin: 0.25rem 0 0;
-  color: #64748b;
-  font-size: 0.9rem;
+  color: #757c94;
+  font-family: "Courier New", monospace;
+  font-size: 0.7rem;
+}
+
+.account-balance {
+  display: grid;
+  text-align: right;
+}
+
+.account-balance span {
+  color: #737990;
+  font-family: "Courier New", monospace;
+  font-size: 0.64rem;
+  text-transform: uppercase;
+}
+
+.account-balance strong {
+  margin-top: 0.15rem;
+  color: #b8ff00;
+  font-size: 1.35rem;
+  text-shadow: 0 0 9px rgba(184, 255, 0, 0.28);
+}
+
+/* Transactions */
+
+.transaction-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid #252b3c;
+}
+
+.transaction-row:last-child {
+  border-bottom: 0;
+}
+
+.deposit-amount,
+.withdrawal-amount {
+  padding: 0.3rem 0.5rem;
+  border: 1px solid currentColor;
+  border-radius: 7px;
+  font-family: "Courier New", monospace;
+  font-weight: 900;
 }
 
 .deposit-amount {
-  color: #15803d;
-  font-weight: 700;
+  color: #b8ff00;
+  box-shadow: 0 0 9px rgba(184, 255, 0, 0.18);
 }
 
 .withdrawal-amount {
-  color: #b91c1c;
-  font-weight: 700;
+  color: #ff5aa5;
+  box-shadow: 0 0 9px rgba(255, 90, 165, 0.18);
 }
 
+/* Alerts */
+
 .alert {
+  margin-bottom: 1.2rem;
+  border: 1px solid currentColor;
+  border-radius: 9px;
   padding: 0.85rem 1rem;
-  border-radius: 8px;
+  font-family: "Courier New", monospace;
+  font-size: 0.75rem;
 }
 
 .error-message {
-  color: #b91c1c;
+  color: #ff6799;
 }
 
 .error-message.alert {
-  background: #fee2e2;
+  background: rgba(255, 60, 120, 0.09);
+  box-shadow: 0 0 12px rgba(255, 60, 120, 0.12);
 }
 
 .success-message {
-  color: #166534;
+  color: #b8ff00;
 }
 
 .success-message.alert {
-  background: #dcfce7;
+  background: rgba(184, 255, 0, 0.07);
+  box-shadow: 0 0 12px rgba(184, 255, 0, 0.1);
 }
 
-@media (max-width: 700px) {
+@media (max-width: 760px) {
   .dashboard-grid {
     grid-template-columns: 1fr;
   }
@@ -191,5 +747,53 @@ select {
   .accounts-panel,
   .transactions-panel {
     grid-column: auto;
+  }
+
+  .user-details {
+    display: none;
+  }
+
+  .balance-hero {
+    min-height: 220px;
+    padding: 1.5rem;
+  }
+
+  .balance-emoji {
+    width: 82px;
+    height: 82px;
+    font-size: 2.7rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .dashboard {
+    width: min(100% - 1rem, 1180px);
+  }
+
+  .brand p,
+  .balance-emoji {
+    display: none;
+  }
+
+  .dashboard-header {
+    align-items: flex-start;
+  }
+
+  .logout-button {
+    padding: 0.65rem;
+    font-size: 0.7rem;
+  }
+
+  .balance-content h2 {
+    font-size: 2.8rem;
+  }
+
+  .account-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .account-balance {
+    text-align: left;
   }
 }

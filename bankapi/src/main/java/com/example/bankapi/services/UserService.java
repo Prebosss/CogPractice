@@ -3,6 +3,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -12,9 +13,11 @@ import com.example.bankapi.repos.UserRepo;
 @Service
 public class UserService {
     private final UserRepo userRepo;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepo userRepo) {
+    public UserService(UserRepo userRepo, PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<User> getUsers() {
@@ -35,6 +38,8 @@ public class UserService {
                 .ifPresent(u -> {
                     throw new ResponseStatusException(HttpStatus.CONFLICT, "User already exists");
                 });
+        user.setPassword(
+        passwordEncoder.encode(user.getPassword()));
         return userRepo.save(user);
     }
 
@@ -55,4 +60,28 @@ public class UserService {
                 })
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with id: " + id));
     }
+
+    public User authenticate(
+    String username,
+    String rawPassword
+) {
+    User user = userRepo
+        .findByUsername(username)
+        .orElseThrow(() -> new ResponseStatusException(
+            HttpStatus.UNAUTHORIZED,
+            "Incorrect username or password"
+        ));
+
+    if (!passwordEncoder.matches(
+        rawPassword,
+        user.getPassword()
+    )) {
+        throw new ResponseStatusException(
+            HttpStatus.UNAUTHORIZED,
+            "Incorrect username or password"
+        );
+    }
+
+    return user;
+}
 }

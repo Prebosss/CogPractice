@@ -2,17 +2,23 @@ import { useEffect, useState } from "react";
 import {
   createAccount,
   createTransaction,
-  createUser,
   getAccounts,
   getTransactions,
   loginUser,
+  registerUser,
 } from "./services/api";
 import "./App.css";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(() => {
     const savedUser = localStorage.getItem("bankUser");
-    return savedUser ? JSON.parse(savedUser) : null;
+    const savedToken = localStorage.getItem("bankToken");
+
+    if (!savedUser || !savedToken) {
+      return null;
+    }
+
+    return JSON.parse(savedUser);
   });
 
   const [accounts, setAccounts] = useState([]);
@@ -31,6 +37,11 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+
+  const totalBalance = accounts.reduce(
+    (total, account) => total + Number(account.balance),
+    0,
+  );
 
   async function loadBankData(userId) {
     try {
@@ -89,26 +100,26 @@ function App() {
       setError("");
       setMessage("");
 
-      let user;
+      const authResponse =
+        authMode === "login"
+          ? await loginUser(username, password)
+          : await registerUser(username, password);
 
-      if (authMode === "login") {
-        user = await loginUser(username, password);
-      } else {
-        user = await createUser(username, password);
-      }
+      localStorage.setItem(
+        "bankToken",
+        authResponse.token,
+      );
 
-      localStorage.setItem("bankUser", JSON.stringify(user));
-      setCurrentUser(user);
+      localStorage.setItem(
+        "bankUser",
+        JSON.stringify(authResponse.user),
+      );
+
+      setCurrentUser(authResponse.user);
       setUsername("");
       setPassword("");
     } catch (err) {
-      if (authMode === "login" && err.message.includes("401")) {
-        setError("Incorrect username or password.");
-      } else if (authMode === "register" && err.message.includes("409")) {
-        setError("That username already exists.");
-      } else {
-        setError(err.message);
-      }
+      setError(err.message);
     } finally {
       setLoading(false);
     }
@@ -125,7 +136,9 @@ function App() {
       await createAccount(currentUser.id, accountType);
       await loadBankData(currentUser.id);
 
-      setMessage(`${accountType} account created.`);
+      setMessage(
+        `${accountType === "SAVINGS" ? "Savings" : "Checking"} account created.`,
+      );
     } catch (err) {
       setError(err.message);
     } finally {
@@ -162,22 +175,25 @@ function App() {
       await loadBankData(currentUser.id);
 
       setAmount("");
+
       setMessage(
-        `${transactionType === "DEPOSIT" ? "Deposit" : "Withdrawal"} completed.`,
+        transactionType === "DEPOSIT"
+          ? "Deposit completed."
+          : "Withdrawal completed.",
       );
     } catch (err) {
-      if (err.message.includes("Declined")) {
-        setError("Withdrawal declined because the account has insufficient funds.");
-      } else {
-        setError(err.message);
-      }
+      setError(err.message);
     } finally {
       setLoading(false);
     }
   }
 
   function handleLogout() {
+    localStorage.removeItem("bankToken");
     localStorage.removeItem("bankUser");
+    setCurrentUser(null);
+    setAuthMode("login");
+
     setCurrentUser(null);
     setAccounts([]);
     setTransactions([]);
@@ -190,11 +206,12 @@ function App() {
     return (
       <main className="auth-page">
         <section className="auth-card">
-          <h1>Spring Bank</h1>
+          <h1>Electro Bank</h1>
+
           <p>
             {authMode === "login"
-              ? "Sign in to view your accounts."
-              : "Create your banking profile."}
+              ? "Welcome back. Sign in to the network to view your money."
+              : "Create your profile and join the network."}
           </p>
 
           <form onSubmit={handleAuthentication}>
@@ -204,6 +221,8 @@ function App() {
                 type="text"
                 value={username}
                 onChange={(event) => setUsername(event.target.value)}
+                placeholder="Enter your username"
+                autoComplete="username"
                 required
               />
             </label>
@@ -214,18 +233,24 @@ function App() {
                 type="password"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
+                placeholder="Enter your password"
+                autoComplete={
+                  authMode === "login"
+                    ? "current-password"
+                    : "new-password"
+                }
                 required
               />
             </label>
 
             {error && <p className="error-message">{error}</p>}
 
-            <button disabled={loading}>
+            <button type="submit" disabled={loading}>
               {loading
                 ? "Please wait..."
                 : authMode === "login"
                   ? "Log in"
-                  : "Register"}
+                  : "Create account"}
             </button>
           </form>
 
@@ -233,13 +258,16 @@ function App() {
             type="button"
             className="text-button"
             onClick={() => {
-              setAuthMode(authMode === "login" ? "register" : "login");
+              setAuthMode(
+                authMode === "login" ? "register" : "login",
+              );
               setError("");
+              setMessage("");
             }}
           >
             {authMode === "login"
-              ? "Need an account? Register"
-              : "Already registered? Log in"}
+              ? "New here? Create an account"
+              : "Already have an account? Log in"}
           </button>
         </section>
       </main>
@@ -249,43 +277,126 @@ function App() {
   return (
     <main className="dashboard">
       <header className="dashboard-header">
-        <div>
-          <h1>Spring Bank</h1>
-          <p>Welcome, {currentUser.username}</p>
+        <div className="brand">
+          <div className="brand-logo">★</div>
+
+          <div>
+            <h1>Electro Bank</h1>
+            <p>Digital Banking // always online</p>
+          </div>
         </div>
 
-        <button className="secondary-button" onClick={handleLogout}>
-          Log out
-        </button>
+        <div className="header-user">
+          <div className="user-avatar">
+            {currentUser.username.charAt(0).toUpperCase()}
+          </div>
+
+          <div className="user-details">
+            <span>Welcome back</span>
+            <strong>{currentUser.username}</strong>
+          </div>
+
+          <button
+            type="button"
+            className="logout-button"
+            onClick={handleLogout}
+          >
+            Log out
+          </button>
+        </div>
       </header>
 
+      <section className="balance-hero">
+        <div className="hero-decoration hero-decoration-one"></div>
+        <div className="hero-decoration hero-decoration-two"></div>
+
+        <div className="balance-content">
+          <span className="eyebrow">Total balance</span>
+
+          <h2>
+            $
+            {totalBalance.toLocaleString("en-US", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
+          </h2>
+
+          <p>
+            Across {accounts.length}{" "}
+            {accounts.length === 1 ? "account" : "accounts"}
+          </p>
+        </div>
+
+        <div className="balance-emoji">☆</div>
+      </section>
+
       {error && <p className="error-message alert">{error}</p>}
-      {message && <p className="success-message alert">{message}</p>}
+
+      {message && (
+        <p className="success-message alert">{message}</p>
+      )}
 
       <section className="dashboard-grid">
         <article className="panel accounts-panel">
-          <h2>Your accounts</h2>
+          <div className="panel-heading">
+            <div>
+              <span className="section-icon">💳</span>
+              <h2>Your accounts</h2>
+            </div>
+
+            <span className="account-count">{accounts.length}</span>
+          </div>
 
           {loading && accounts.length === 0 ? (
-            <p>Loading accounts...</p>
+            <p>Loading your accounts...</p>
           ) : accounts.length === 0 ? (
-            <p>You do not have any accounts yet.</p>
+            <p className="panel-description">
+              You do not have any accounts yet. Open one below to
+              get started.
+            </p>
           ) : (
             <div className="account-list">
               {accounts.map((account) => (
                 <div className="account-card" key={account.id}>
-                  <div>
-                    <span className="account-type">
-                      {account.accountType}
-                    </span>
-                    <p className="account-id">
-                      Account ending in {account.id.slice(-4)}
-                    </p>
+                  <div className="account-card-left">
+                    <div
+                      className={`account-icon ${account.accountType === "SAVINGS"
+                        ? "savings-icon"
+                        : "checking-icon"
+                        }`}
+                    >
+                      {account.accountType === "SAVINGS"
+                        ? "🐷"
+                        : "💳"}
+                    </div>
+
+                    <div>
+                      <span className="account-type">
+                        {account.accountType === "SAVINGS"
+                          ? "Savings account"
+                          : "Checking account"}
+                      </span>
+
+                      <p className="account-id">
+                        •••• {account.id.slice(-4)}
+                      </p>
+                    </div>
                   </div>
 
-                  <strong>
-                    ${Number(account.balance).toFixed(2)}
-                  </strong>
+                  <div className="account-balance">
+                    <span>Available</span>
+
+                    <strong>
+                      $
+                      {Number(account.balance).toLocaleString(
+                        "en-US",
+                        {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        },
+                      )}
+                    </strong>
+                  </div>
                 </div>
               ))}
             </div>
@@ -293,26 +404,48 @@ function App() {
         </article>
 
         <article className="panel">
-          <h2>Open an account</h2>
+          <div className="panel-heading">
+            <div>
+              <span className="section-icon">✨</span>
+              <h2>Open a new account</h2>
+            </div>
+          </div>
+
+          <p className="panel-description">
+            Pick an account type and start saving.
+          </p>
 
           <form onSubmit={handleCreateAccount}>
             <label>
               Account type
               <select
                 value={accountType}
-                onChange={(event) => setAccountType(event.target.value)}
+                onChange={(event) =>
+                  setAccountType(event.target.value)
+                }
               >
                 <option value="CHECKING">Checking</option>
                 <option value="SAVINGS">Savings</option>
               </select>
             </label>
 
-            <button disabled={loading}>Create account</button>
+            <button type="submit" disabled={loading}>
+              {loading ? "Creating..." : "Create account"}
+            </button>
           </form>
         </article>
 
         <article className="panel">
-          <h2>Make a transaction</h2>
+          <div className="panel-heading">
+            <div>
+              <span className="section-icon">↗️</span>
+              <h2>Move money</h2>
+            </div>
+          </div>
+
+          <p className="panel-description">
+            Deposit money or make a withdrawal.
+          </p>
 
           <form onSubmit={handleTransaction}>
             <label>
@@ -338,7 +471,7 @@ function App() {
             </label>
 
             <label>
-              Transaction
+              Transaction type
               <select
                 value={transactionType}
                 onChange={(event) =>
@@ -363,27 +496,46 @@ function App() {
               />
             </label>
 
-            <button disabled={loading || accounts.length === 0}>
-              Submit transaction
+            <button
+              type="submit"
+              disabled={loading || accounts.length === 0}
+            >
+              {loading ? "Processing..." : "Submit transaction"}
             </button>
           </form>
         </article>
 
         <article className="panel transactions-panel">
-          <h2>Transaction history</h2>
+          <div className="panel-heading">
+            <div>
+              <span className="section-icon">🧾</span>
+              <h2>Recent activity</h2>
+            </div>
+          </div>
 
           {transactions.length === 0 ? (
-            <p>No transactions found.</p>
+            <p className="panel-description">
+              No transactions yet. Your activity will appear here.
+            </p>
           ) : (
             <div className="transaction-list">
               {transactions.map((transaction) => {
+                const normalizedType =
+                  transaction.transactionType.toUpperCase();
+
                 const isDeposit =
-                  transaction.transactionType.toUpperCase() === "DEPOSIT";
+                  normalizedType === "DEPOSIT";
 
                 return (
-                  <div className="transaction-row" key={transaction.id}>
+                  <div
+                    className="transaction-row"
+                    key={transaction.id}
+                  >
                     <div>
-                      <strong>{transaction.transactionType}</strong>
+                      <strong>
+                        {isDeposit ? "Deposit" : "Withdrawal"}
+                      </strong>
+
                       <p>
                         Account ending in{" "}
                         {transaction.accountId.slice(-4)}
