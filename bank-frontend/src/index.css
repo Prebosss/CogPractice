@@ -1,0 +1,24 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  min-height: 100%;
+  background: #f7f5ff;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  background:
+    radial-gradient(circle at 0 0, #eee9ff 0, transparent 24rem),
+    #f7f5ff;
+}
+
+button,
+input,
+select {
+  -webkit-tap-highlight-color: transparent;
+}

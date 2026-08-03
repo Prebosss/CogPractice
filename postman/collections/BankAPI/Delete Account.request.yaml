@@ -1,0 +1,12 @@
+$kind: http-request
+name: Delete Account
+description: ""
+url: http://localhost:8080/api/v1/accounts/6a6a32924e9aafa07d11d3dc
+method: DELETE
+body:
+  type: json
+  content: |-
+    {
+        "balance": 33
+    }
+order: 272923324889927

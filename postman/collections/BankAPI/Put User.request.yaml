@@ -1,0 +1,12 @@
+$kind: http-request
+name: Put User
+description: ""
+url: http://localhost:8080/api/v1/users/6a6a39f818a2291594148864
+method: PUT
+body:
+  type: json
+  content: |-
+    {
+        "username": "change"
+    }
+order: 4484088761289602

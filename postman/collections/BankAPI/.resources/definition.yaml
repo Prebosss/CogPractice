@@ -1,0 +1,6 @@
+$kind: collection
+name: BankAPI
+variables:
+  - key: json_web_token_0ahm
+    secret: true
+    disabled: false

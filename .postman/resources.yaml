@@ -1,0 +1,10 @@
+workspace:
+  id: d7c51386-428c-4622-af3d-8357c72d673c
+localResources:
+  documents:
+    - ../README.md
+cloudResources:
+  collections:
+    ../postman/collections/BankAPI: 56934787-6f27c792-23d5-4e81-9383-e49f5c5ef7e8
+  documents:
+    ../README.md: 4d0fb8ce-e074-474c-b4fa-c1e5bb23bfed

@@ -1,0 +1,14 @@
+$kind: http-request
+name: Delete Transaction
+description: ""
+url: http://localhost:8080/api/v1/transactions/6a6a34b1b902abe5ab2d2773
+method: DELETE
+body:
+  type: json
+  content: |-
+    {
+        "accountId": "6a6a32924e9aafa07d11d3dc",
+        "amount": 500,
+        "transactionType": "WITHDRAWAL"
+    }
+order: 4133182030261590

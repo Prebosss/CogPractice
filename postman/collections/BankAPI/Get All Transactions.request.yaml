@@ -1,0 +1,14 @@
+$kind: http-request
+name: Get All Transactions
+description: ""
+url: http://localhost:8080/api/v1/transactions
+method: GET
+body:
+  type: json
+  content: |-
+    {
+        "accountId": "6a6a32924e9aafa07d11d3dc",
+        "amount": 500,
+        "transactionType": "WITHDRAWAL"
+    }
+order: 3963073238283345
