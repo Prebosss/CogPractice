@@ -1,4 +1,5 @@
 package com.example.bankapi.controllers;
+
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -18,21 +19,21 @@ import com.example.bankapi.services.UserService;
 @RequestMapping("/api/v1")
 public class UserController {
     private final UserService userService;
-    
+
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
     @GetMapping("/users")
-    public ResponseEntity<List<User>> getUsers(){
+    public ResponseEntity<List<User>> getUsers() {
         return ResponseEntity.ok(this.userService.getUsers());
     }
 
     @GetMapping("/users/{id}")
     public ResponseEntity<User> getUserById(@PathVariable String id) {
         return this.userService.getUserById(id)
-        .map(ResponseEntity::ok)
-        .orElseGet(() -> ResponseEntity.notFound().build());
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/users")
@@ -64,6 +65,6 @@ public class UserController {
         return userService.login(user.getUsername(), user.getPassword())
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(401).build());
-    }   
-    
+    }
+
 }

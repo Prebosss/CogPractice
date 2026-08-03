@@ -1,4 +1,5 @@
 package com.example.bankapi.models;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -7,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Account {
     @Id
     private String id;
-    
+
     private String userId;
     private double balance;
     private String accountType;
@@ -20,7 +21,7 @@ public class Account {
         this.id = id;
         this.userId = userId;
         this.accountType = accountType;
-        this.balance = 0.00; 
+        this.balance = 0.00;
     }
 
     public String getId() {

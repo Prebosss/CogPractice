@@ -1,14 +1,14 @@
 package com.example.bankapi.models;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "transactions")
 
-
 public class Transaction {
     @Id
     private String id;
-    
+
     private String accountId;
     private double amount;
     private String transactionType;
@@ -40,7 +40,7 @@ public class Transaction {
         this.accountId = accountId;
     }
 
-    //WITHDRAWAL, DEPOSIT
+    // WITHDRAWAL, DEPOSIT
     public String getTransactionType() {
         return transactionType;
     }

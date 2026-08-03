@@ -1,4 +1,5 @@
 package com.example.bankapi.services;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -39,7 +40,7 @@ public class UserService {
                     throw new ResponseStatusException(HttpStatus.CONFLICT, "User already exists");
                 });
         user.setPassword(
-        passwordEncoder.encode(user.getPassword()));
+                passwordEncoder.encode(user.getPassword()));
         return userRepo.save(user);
     }
 
@@ -62,26 +63,22 @@ public class UserService {
     }
 
     public User authenticate(
-    String username,
-    String rawPassword
-) {
-    User user = userRepo
-        .findByUsername(username)
-        .orElseThrow(() -> new ResponseStatusException(
-            HttpStatus.UNAUTHORIZED,
-            "Incorrect username or password"
-        ));
+            String username,
+            String rawPassword) {
+        User user = userRepo
+                .findByUsername(username)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.UNAUTHORIZED,
+                        "Incorrect username or password"));
 
-    if (!passwordEncoder.matches(
-        rawPassword,
-        user.getPassword()
-    )) {
-        throw new ResponseStatusException(
-            HttpStatus.UNAUTHORIZED,
-            "Incorrect username or password"
-        );
+        if (!passwordEncoder.matches(
+                rawPassword,
+                user.getPassword())) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Incorrect username or password");
+        }
+
+        return user;
     }
-
-    return user;
-}
 }

@@ -1,4 +1,5 @@
 package com.example.bankapi.controllers;
+
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.bankapi.models.Account;
 import com.example.bankapi.services.AccountService;
 
-
 @RestController
 @RequestMapping("/api/v1")
 public class AccountController {
@@ -23,17 +23,17 @@ public class AccountController {
     public AccountController(AccountService accountService) {
         this.accountService = accountService;
     }
-    
+
     @GetMapping("/accounts")
-    public ResponseEntity<List<Account>> getAccounts(){
+    public ResponseEntity<List<Account>> getAccounts() {
         return ResponseEntity.ok(this.accountService.getAccounts());
     }
 
     @GetMapping("/accounts/{id}")
     public ResponseEntity<Account> getAccountById(@PathVariable String id) {
         return this.accountService.getAccountById(id)
-        .map(ResponseEntity::ok)
-        .orElseGet(() -> ResponseEntity.notFound().build());
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/accounts")

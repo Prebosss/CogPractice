@@ -23,58 +23,49 @@ public class AuthController {
     private final JwtService jwtService;
 
     public AuthController(
-        UserService userService,
-        JwtService jwtService
-    ) {
+            UserService userService,
+            JwtService jwtService) {
         this.userService = userService;
         this.jwtService = jwtService;
     }
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(
-        @RequestBody RegisterRequest request
-    ) {
+            @RequestBody RegisterRequest request) {
         User newUser = new User(
-            null,
-            request.username(),
-            request.password()
-        );
+                null,
+                request.username(),
+                request.password());
 
         User savedUser = userService.createUser(newUser);
 
         String token = jwtService.generateToken(savedUser);
 
         AuthResponse response = new AuthResponse(
-            token,
-            new UserResponse(
-                savedUser.getId(),
-                savedUser.getUsername()
-            )
-        );
+                token,
+                new UserResponse(
+                        savedUser.getId(),
+                        savedUser.getUsername()));
 
         return ResponseEntity
-            .status(HttpStatus.CREATED)
-            .body(response);
+                .status(HttpStatus.CREATED)
+                .body(response);
     }
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(
-        @RequestBody LoginRequest request
-    ) {
+            @RequestBody LoginRequest request) {
         User user = userService.authenticate(
-            request.username(),
-            request.password()
-        );
+                request.username(),
+                request.password());
 
         String token = jwtService.generateToken(user);
 
         AuthResponse response = new AuthResponse(
-            token,
-            new UserResponse(
-                user.getId(),
-                user.getUsername()
-            )
-        );
+                token,
+                new UserResponse(
+                        user.getId(),
+                        user.getUsername()));
 
         return ResponseEntity.ok(response);
     }

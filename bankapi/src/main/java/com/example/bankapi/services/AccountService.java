@@ -1,4 +1,5 @@
 package com.example.bankapi.services;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +20,7 @@ public class AccountService {
         this.accountRepo = accountRepo;
         this.userRepo = userRepo;
     }
+
     public List<Account> getAccounts() {
         return accountRepo.findAll();
     }
@@ -39,17 +41,16 @@ public class AccountService {
 
     public Account updateAccount(String id, Account updatedAccount) {
         return accountRepo.findById(id).map(existingAccount -> {
-                    if (updatedAccount.getUserId() != null) {
-                        existingAccount.setUserId(updatedAccount.getUserId());
-                    }
-                    if (updatedAccount.getBalance() != 0.0) {
-                        existingAccount.setBalance(updatedAccount.getBalance());
-                    }
-                    if (updatedAccount.getAccountType() != null) {
-                        existingAccount.setAccountType(updatedAccount.getAccountType());
-                    }
-                    return accountRepo.save(existingAccount);
-                }).orElseThrow(() -> new RuntimeException("Account not found"));
+            if (updatedAccount.getUserId() != null) {
+                existingAccount.setUserId(updatedAccount.getUserId());
+            }
+            if (updatedAccount.getBalance() != 0.0) {
+                existingAccount.setBalance(updatedAccount.getBalance());
+            }
+            if (updatedAccount.getAccountType() != null) {
+                existingAccount.setAccountType(updatedAccount.getAccountType());
+            }
+            return accountRepo.save(existingAccount);
+        }).orElseThrow(() -> new RuntimeException("Account not found"));
     }
 }
-

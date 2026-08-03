@@ -1,4 +1,5 @@
 package com.example.bankapi.controllers;
+
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -23,15 +24,15 @@ public class TransactionController {
     }
 
     @GetMapping("/transactions")
-    public ResponseEntity<List<Transaction>> getTransactions(){
+    public ResponseEntity<List<Transaction>> getTransactions() {
         return ResponseEntity.ok(this.transactionService.getTransactions());
     }
 
     @GetMapping("/transactions/{id}")
     public ResponseEntity<Transaction> getTransactionById(@PathVariable String id) {
         return this.transactionService.getTransactionById(id)
-        .map(ResponseEntity::ok)
-        .orElseGet(() -> ResponseEntity.notFound().build());
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/transactions")
@@ -47,5 +48,5 @@ public class TransactionController {
                     return ResponseEntity.noContent().<Void>build();
                 })
                 .orElseGet(() -> ResponseEntity.notFound().build());
-            }
+    }
 }

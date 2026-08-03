@@ -1,12 +1,14 @@
 package com.example.bankapi.config;
 
 import java.util.Base64;
+import java.util.List;
 
 import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -18,10 +20,12 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import com.nimbusds.jose.proc.SecurityContext;
-
 
 @Configuration
 public class SecurityConfig {
@@ -31,33 +35,33 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(
-        HttpSecurity http
-    ) throws Exception {
+            HttpSecurity http) throws Exception {
 
         http
-            .csrf(csrf -> csrf.disable())
+                .cors(Customizer.withDefaults())
 
-            .sessionManagement(session -> session
-                .sessionCreationPolicy(
-                    SessionCreationPolicy.STATELESS
-                )
-            )
+                .csrf(csrf -> csrf.disable())
 
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(
-                    "/api/v1/auth/**"
-                ).permitAll()
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(
+                                SessionCreationPolicy.STATELESS))
 
-                .requestMatchers(
-                    "/api/v1/users/register"
-                ).permitAll()
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.OPTIONS, "/**")
+                        .permitAll()
 
-                .anyRequest().authenticated()
-            )
+                        .requestMatchers(
+                                "/api/v1/auth/**")
+                        .permitAll()
 
-            .oauth2ResourceServer(oauth2 -> oauth2
-                .jwt(Customizer.withDefaults())
-            );
+                        .requestMatchers(
+                                "/api/v1/users/register")
+                        .permitAll()
+
+                        .anyRequest().authenticated())
+
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(Customizer.withDefaults()));
 
         return http.build();
     }
@@ -70,28 +74,57 @@ public class SecurityConfig {
     @Bean
     public SecretKey jwtSecretKey() {
         byte[] decodedSecret = Base64
-            .getDecoder()
-            .decode(jwtSecret);
+                .getDecoder()
+                .decode(jwtSecret);
 
         return new javax.crypto.spec.SecretKeySpec(
-            decodedSecret,
-            "HmacSHA256"
-        );
+                decodedSecret,
+                "HmacSHA256");
     }
 
     @Bean
     public JwtDecoder jwtDecoder(SecretKey jwtSecretKey) {
         return NimbusJwtDecoder
-            .withSecretKey(jwtSecretKey)
-            .macAlgorithm(MacAlgorithm.HS256)
-            .build();
+                .withSecretKey(jwtSecretKey)
+                .macAlgorithm(MacAlgorithm.HS256)
+                .build();
     }
 
     @Bean
     public JwtEncoder jwtEncoder(SecretKey jwtSecretKey) {
-        ImmutableSecret<SecurityContext> secret =
-            new ImmutableSecret<>(jwtSecretKey);
+        ImmutableSecret<SecurityContext> secret = new ImmutableSecret<>(jwtSecretKey);
 
         return new NimbusJwtEncoder(secret);
     }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.setAllowedOrigins(List.of(
+                "http://student-kennetharias-front.s3-website-us-east-1.amazonaws.com",
+                "http://localhost:5173"));
+
+        configuration.setAllowedMethods(List.of(
+                "GET",
+                "POST",
+                "PUT",
+                "DELETE",
+                "OPTIONS"));
+
+        configuration.setAllowedHeaders(List.of(
+                "Authorization",
+                "Content-Type"));
+
+        configuration.setAllowCredentials(false);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+
+        source.registerCorsConfiguration(
+                "/**",
+                configuration);
+
+        return source;
+    }
+
 }

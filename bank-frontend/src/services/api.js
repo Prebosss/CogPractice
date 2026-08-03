@@ -1,5 +1,5 @@
-const API_BASE_URL = "/api/v1";
-
+const API_BASE_URL =
+    `${import.meta.env.VITE_API_URL}/api/v1`;
 function getToken() {
     return localStorage.getItem("bankToken");
 }
@@ -7,7 +7,7 @@ function getToken() {
 async function request(endpoint, options = {}) {
     const token = localStorage.getItem("bankToken");
 
-    const response = await fetch(`/api/v1${endpoint}`, {
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         ...options,
         headers: {
             "Content-Type": "application/json",
